@@ -114,12 +114,14 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    claimFirstAdmin(): Promise<boolean>;
     getAllRequests(): Promise<Array<ContactRequest>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getRequestByTimestamp(timestamp: bigint): Promise<ContactRequest>;
     getRequestsByServiceType(serviceType: ServiceType): Promise<Array<ContactRequest>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isAdminClaimed(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitRequest(name: string, email: string, phone: string, company: string, serviceType: ServiceType, message: string): Promise<void>;
@@ -251,6 +253,30 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.isCallerAdmin();
             return result;
+        }
+    }
+    async claimFirstAdmin(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                return await this.actor.claimFirstAdmin();
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            return await this.actor.claimFirstAdmin();
+        }
+    }
+    async isAdminClaimed(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                return await this.actor.isAdminClaimed();
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            return await this.actor.isAdminClaimed();
         }
     }
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {

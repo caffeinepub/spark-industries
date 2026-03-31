@@ -8,7 +8,7 @@ const SERVICES = [
     title: "Laser Cutting",
     subtitle: "High-Speed Fiber Laser Precision",
     description:
-      "Our 4000W fiber laser delivers unmatched speed and precision for sheet metal cutting. From intricate details to heavy plate work, we achieve tolerances competitors can't match.",
+      "Our 3000W fiber laser delivers unmatched speed and precision for sheet metal cutting. From intricate details to heavy plate work, we achieve tolerances competitors can't match.",
     features: [
       'Steel, aluminum & stainless up to 1" thick',
       'Tolerances to ±0.005" on all cuts',
@@ -16,7 +16,7 @@ const SERVICES = [
       "Complex geometry and tight nesting",
       "Burr-free edges on most materials",
     ],
-    image: "/assets/generated/service-laser-cutting.dim_800x500.jpg",
+    image: "/assets/generated/service-laser-cutting-new.dim_800x500.jpg",
   },
   {
     id: "press",
@@ -32,7 +32,7 @@ const SERVICES = [
       "Prototypes to high-volume production",
       "In-house tooling for custom profiles",
     ],
-    image: "/assets/generated/service-press-brake.dim_800x500.jpg",
+    image: "/assets/generated/service-press-brake-new.dim_800x500.jpg",
   },
 ];
 

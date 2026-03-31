@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ContactRequest } from "../backend";
 import { ServiceType } from "../backend";
 import { useActor } from "./useActor";
@@ -55,6 +55,36 @@ export function useAllRequests(serviceFilter?: ServiceType, enabled = true) {
       return actor.getAllRequests();
     },
     enabled: !!actor && !isFetching && enabled,
+  });
+}
+
+export function useIsAdminClaimed() {
+  const { actor, isFetching } = useActor();
+  const { data: isClaimed, isLoading } = useQuery({
+    queryKey: ["isAdminClaimed"],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isAdminClaimed();
+    },
+    enabled: !!actor && !isFetching,
+  });
+  return { isClaimed: isClaimed ?? false, isLoading: isFetching || isLoading };
+}
+
+export function useClaimFirstAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error("Service temporarily unavailable.");
+      const success = await actor.claimFirstAdmin();
+      if (!success) throw new Error("Admin has already been claimed.");
+      return success;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["isAdmin"] });
+      queryClient.invalidateQueries({ queryKey: ["isAdminClaimed"] });
+    },
   });
 }
 

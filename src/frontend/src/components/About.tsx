@@ -1,11 +1,11 @@
-import { Award, Factory, TrendingUp, Users } from "lucide-react";
+import { Award, Clock, TrendingUp, Users } from "lucide-react";
 import { motion } from "motion/react";
 
 const STATS = [
-  { icon: Factory, value: "20+", label: "Years in Business" },
-  { icon: Award, value: "ISO", label: "9001 Certified" },
-  { icon: Users, value: "500+", label: "Clients Served" },
-  { icon: TrendingUp, value: "4", label: "Industries Served" },
+  { icon: Clock, value: "1–5 Days", label: "Production" },
+  { icon: Users, value: "200+", label: "Clients Served" },
+  { icon: Award, value: "5 Years", label: "Years in Business" },
+  { icon: TrendingUp, value: "5+", label: "Years of Excellence" },
 ];
 
 export default function About() {
@@ -23,7 +23,7 @@ export default function About() {
           >
             <div className="relative rounded-xl overflow-hidden shadow-card-lift">
               <img
-                src="/assets/generated/about-manufacturing-facility.dim_800x600.jpg"
+                src="/assets/generated/about-spark-industries-facility.dim_800x600.jpg"
                 alt="Spark Industries manufacturing facility"
                 className="w-full h-[420px] object-cover"
                 loading="lazy"
@@ -33,7 +33,7 @@ export default function About() {
             {/* Floating badge */}
             <div className="absolute -bottom-5 -right-5 bg-pf-orange rounded-xl px-6 py-4 shadow-orange-glow">
               <p className="font-heading font-bold text-white text-3xl leading-none">
-                20+
+                5+
               </p>
               <p className="text-white/80 text-[12px] mt-0.5">
                 Years of Excellence
@@ -58,15 +58,15 @@ export default function About() {
 
             <p className="text-foreground/75 text-[15px] leading-relaxed mb-5">
               Spark Industries has been a trusted partner in precision metal
-              fabrication for over two decades. Founded on principles of
-              quality, reliability, and continuous improvement, we deliver
+              fabrication for over 5 years. Founded on principles of quality,
+              reliability, and continuous improvement, we deliver
               industry-leading results for the most demanding applications.
             </p>
             <p className="text-foreground/70 text-[15px] leading-relaxed mb-8">
-              Our ISO 9001 certified facility combines state-of-the-art fiber
-              laser technology with expert CNC press brake operations to serve
-              aerospace, automotive, construction, and OEM industries. Every
-              part leaves our shop to print — guaranteed.
+              Our state-of-the-art 3000W fiber laser facility combined with
+              expert CNC press brake operations serves 200+ clients with fast
+              turnaround times of just 1–5 days. Every part leaves our shop to
+              print — guaranteed.
             </p>
 
             {/* Stats grid */}

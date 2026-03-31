@@ -19,17 +19,27 @@ import {
 } from "@/components/ui/tooltip";
 import {
   BarChart3,
+  CheckCircle2,
+  Copy,
   FileText,
   Loader2,
   LogOut,
   ShieldAlert,
+  ShieldCheck,
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ContactRequest } from "../backend";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import { ServiceType, useAllRequests, useIsAdmin } from "../hooks/useQueries";
+import {
+  ServiceType,
+  useAllRequests,
+  useClaimFirstAdmin,
+  useIsAdmin,
+  useIsAdminClaimed,
+} from "../hooks/useQueries";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -82,7 +92,10 @@ export default function AdminPage() {
   const { identity, login, clear, isInitializing, isLoggingIn } =
     useInternetIdentity();
   const { isAdmin, isLoading: adminLoading } = useIsAdmin();
+  const { isClaimed, isLoading: isClaimedLoading } = useIsAdminClaimed();
+  const claimAdmin = useClaimFirstAdmin();
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [copied, setCopied] = useState(false);
   const { data: allRequests = [], isLoading: requestsLoading } = useAllRequests(
     undefined,
     !!isAdmin,
@@ -93,6 +106,25 @@ export default function AdminPage() {
     activeTab === "all"
       ? allRequests
       : allRequests.filter((r) => r.serviceType === activeTab);
+
+  const handleClaimAdmin = () => {
+    claimAdmin.mutate(undefined, {
+      onSuccess: () =>
+        toast.success(
+          "Admin access claimed! Please refresh the page to continue.",
+        ),
+      onError: (error: Error) =>
+        toast.error(error.message || "Failed to claim admin access."),
+    });
+  };
+
+  const handleCopyPrincipal = () => {
+    if (principal) {
+      navigator.clipboard.writeText(principal);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   // ── State 1: Initializing ──────────────────────────────────────────────────
   if (isInitializing) {
@@ -174,8 +206,8 @@ export default function AdminPage() {
     );
   }
 
-  // ── State 3: Checking admin status ────────────────────────────────────────
-  if (adminLoading) {
+  // ── State 3: Checking admin / claimed status ───────────────────────────────
+  if (adminLoading || isClaimedLoading) {
     return (
       <div className="min-h-screen bg-pf-navy flex items-center justify-center gap-3">
         <Toaster richColors position="top-right" />
@@ -189,6 +221,90 @@ export default function AdminPage() {
 
   // ── State 4: Logged in but not admin ──────────────────────────────────────
   if (!isAdmin) {
+    // Sub-case A: No admin claimed yet — let this user become admin
+    if (!isClaimed) {
+      return (
+        <div className="min-h-screen bg-pf-navy flex items-center justify-center p-4">
+          <Toaster richColors position="top-right" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-sm text-center"
+            data-ocid="admin.claim.card"
+          >
+            <div className="bg-pf-card border border-border rounded-xl p-10 shadow-card-lift">
+              <div className="flex justify-center mb-5">
+                <div className="w-16 h-16 rounded-full bg-pf-orange/10 flex items-center justify-center border border-pf-orange/25">
+                  <ShieldCheck className="h-8 w-8 text-pf-orange" />
+                </div>
+              </div>
+
+              {claimAdmin.isSuccess ? (
+                <>
+                  <div className="flex justify-center mb-4">
+                    <CheckCircle2 className="h-8 w-8 text-emerald-400" />
+                  </div>
+                  <h2 className="font-heading font-bold text-white text-xl mb-2 tracking-tight">
+                    Access Granted!
+                  </h2>
+                  <p className="text-foreground/55 text-sm mb-7 leading-relaxed">
+                    You are now the admin. Please refresh the page to access the
+                    dashboard.
+                  </p>
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className="w-full bg-pf-orange hover:bg-pf-orange/90 text-white font-semibold h-11"
+                    data-ocid="admin.claim.reload_button"
+                  >
+                    Refresh Page
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <h2 className="font-heading font-bold text-white text-xl mb-2 tracking-tight">
+                    Set Up Admin Access
+                  </h2>
+                  <p className="text-foreground/55 text-sm mb-7 leading-relaxed">
+                    No admin account has been set up yet. Click below to claim
+                    admin access for this Internet Identity.
+                  </p>
+                  <Button
+                    onClick={handleClaimAdmin}
+                    disabled={claimAdmin.isPending}
+                    className="w-full bg-pf-orange hover:bg-pf-orange/90 text-white font-semibold h-11 shadow-orange-glow hover:shadow-none transition-all duration-200 mb-3"
+                    data-ocid="admin.claim.primary_button"
+                  >
+                    {claimAdmin.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Claiming…
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="mr-2 h-4 w-4" />
+                        Claim Admin Access
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    onClick={clear}
+                    variant="ghost"
+                    className="w-full text-foreground/40 hover:text-foreground/70 hover:bg-white/5 text-sm"
+                    data-ocid="admin.claim.logout_button"
+                  >
+                    <LogOut className="mr-2 h-3.5 w-3.5" />
+                    Log Out
+                  </Button>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      );
+    }
+
+    // Sub-case B: Admin already claimed by someone else
     return (
       <div className="min-h-screen bg-pf-navy flex items-center justify-center p-4">
         <Toaster richColors position="top-right" />
@@ -214,12 +330,42 @@ export default function AdminPage() {
             <Button
               onClick={clear}
               variant="outline"
-              className="border-border hover:bg-white/10 text-foreground/80"
+              className="border-border hover:bg-white/10 text-foreground/80 mb-6"
               data-ocid="admin.logout.button"
             >
               <LogOut className="mr-2 h-4 w-4" />
               Log Out
             </Button>
+
+            {/* Principal ID section */}
+            {principal && (
+              <div className="border-t border-border/50 pt-6">
+                <p className="text-foreground/35 text-[11px] uppercase tracking-widest mb-2">
+                  Your Principal ID
+                </p>
+                <p className="text-foreground/40 text-[11px] mb-3 leading-relaxed">
+                  Share this with the admin to request access.
+                </p>
+                <div className="flex items-center gap-2 bg-pf-navy/60 border border-border/60 rounded-lg px-3 py-2">
+                  <code className="flex-1 text-[11px] text-foreground/55 font-mono break-all text-left leading-relaxed">
+                    {principal}
+                  </code>
+                  <Button
+                    onClick={handleCopyPrincipal}
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 h-7 w-7 p-0 hover:bg-white/10 text-foreground/40 hover:text-foreground/70"
+                    data-ocid="admin.principal.copy_button"
+                  >
+                    {copied ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

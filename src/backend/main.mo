@@ -45,6 +45,20 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // Claim admin: first logged-in user to call this becomes admin (only works if no admin assigned yet)
+  public shared ({ caller }) func claimFirstAdmin() : async Bool {
+    if (caller.isAnonymous()) { return false };
+    if (accessControlState.adminAssigned) { return false };
+    accessControlState.userRoles.add(caller, #admin);
+    accessControlState.adminAssigned := true;
+    return true;
+  };
+
+  // Check whether any admin has been assigned yet
+  public query func isAdminClaimed() : async Bool {
+    accessControlState.adminAssigned;
+  };
+
   // User profile management functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {

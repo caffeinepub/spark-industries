@@ -31,12 +31,14 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    claimFirstAdmin(): Promise<boolean>;
     getAllRequests(): Promise<Array<ContactRequest>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getRequestByTimestamp(timestamp: bigint): Promise<ContactRequest>;
     getRequestsByServiceType(serviceType: ServiceType): Promise<Array<ContactRequest>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isAdminClaimed(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitRequest(name: string, email: string, phone: string, company: string, serviceType: ServiceType, message: string): Promise<void>;
