@@ -32,7 +32,7 @@ export default function Hero() {
         >
           <span className="inline-flex items-center gap-2 text-pf-orange text-[12px] font-semibold tracking-[0.25em] uppercase border border-pf-orange/30 bg-pf-orange/10 rounded-full px-4 py-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-pf-orange" />
-            ISO 9001 Certified • 20+ Years Experience
+            ISO 9001 Certified • 5+ Years of Excellence
           </span>
         </motion.div>
 
@@ -92,10 +92,10 @@ export default function Hero() {
           className="flex flex-wrap justify-center gap-8 mt-16 pt-8 border-t border-white/10"
         >
           {[
-            { value: "20+", label: "Years Experience" },
+            { value: "5+", label: "Years Excellence" },
             { value: '±0.005"', label: "Tolerance Precision" },
-            { value: "4000W", label: "Fiber Laser" },
-            { value: "6-Axis", label: "Press Brake" },
+            { value: "3000W", label: "Fiber Laser" },
+            { value: "CNC", label: "Press Brake" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="font-heading font-bold text-pf-orange text-2xl leading-none mb-1">

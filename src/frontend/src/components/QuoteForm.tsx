@@ -281,7 +281,7 @@ export default function QuoteForm() {
           >
             <div className="relative rounded-xl overflow-hidden shadow-card-lift">
               <img
-                src="/assets/generated/quote-metal-parts.dim_700x600.jpg"
+                src="/assets/generated/parts-manufactured-to-print.dim_800x500.jpg"
                 alt="Precision laser-cut metal parts"
                 className="w-full h-72 lg:h-80 object-cover"
                 loading="lazy"
