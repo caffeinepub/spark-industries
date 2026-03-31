@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Zap } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
@@ -43,9 +43,11 @@ export default function Navbar() {
           className="flex items-center gap-2.5 shrink-0"
           data-ocid="nav.home.link"
         >
-          <div className="flex items-center justify-center w-9 h-9 bg-pf-orange rounded-md shadow-orange-glow">
-            <Zap className="h-5 w-5 text-white fill-white" />
-          </div>
+          <img
+            src="/assets/white_background_logo-removebg-preview-019d425b-8737-7589-bbc1-dd082960f2e0.png"
+            alt="Spark Industries Logo"
+            className="h-10 w-10 object-contain"
+          />
           <div className="hidden sm:block">
             <p className="text-white font-heading font-bold text-[15px] leading-tight tracking-wide uppercase">
               Spark Industries
@@ -99,9 +101,11 @@ export default function Navbar() {
           >
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2.5 p-6 border-b border-border">
-                <div className="flex items-center justify-center w-8 h-8 bg-pf-orange rounded-md">
-                  <Zap className="h-4 w-4 text-white fill-white" />
-                </div>
+                <img
+                  src="/assets/white_background_logo-removebg-preview-019d425b-8737-7589-bbc1-dd082960f2e0.png"
+                  alt="Spark Industries Logo"
+                  className="h-8 w-8 object-contain"
+                />
                 <span className="text-white font-heading font-bold text-[15px] tracking-wide uppercase">
                   Spark Industries
                 </span>
