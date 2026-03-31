@@ -16,14 +16,28 @@ export interface ContactRequest {
     timestamp: bigint;
     phone: string;
 }
+export interface UserProfile {
+    name: string;
+}
 export enum ServiceType {
     both = "both",
     laserCutting = "laserCutting",
     pressBrake = "pressBrake"
 }
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
 export interface backendInterface {
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllRequests(): Promise<Array<ContactRequest>>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
     getRequestByTimestamp(timestamp: bigint): Promise<ContactRequest>;
     getRequestsByServiceType(serviceType: ServiceType): Promise<Array<ContactRequest>>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isCallerAdmin(): Promise<boolean>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitRequest(name: string, email: string, phone: string, company: string, serviceType: ServiceType, message: string): Promise<void>;
 }

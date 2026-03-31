@@ -8,6 +8,11 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
 export const ServiceType = IDL.Variant({
   'both' : IDL.Null,
   'laserCutting' : IDL.Null,
@@ -22,15 +27,27 @@ export const ContactRequest = IDL.Record({
   'timestamp' : IDL.Int,
   'phone' : IDL.Text,
 });
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'getAllRequests' : IDL.Func([], [IDL.Vec(ContactRequest)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getRequestByTimestamp' : IDL.Func([IDL.Int], [ContactRequest], ['query']),
   'getRequestsByServiceType' : IDL.Func(
       [ServiceType],
       [IDL.Vec(ContactRequest)],
       ['query'],
     ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitRequest' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, ServiceType, IDL.Text],
       [],
@@ -41,6 +58,11 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
   const ServiceType = IDL.Variant({
     'both' : IDL.Null,
     'laserCutting' : IDL.Null,
@@ -55,15 +77,27 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : IDL.Int,
     'phone' : IDL.Text,
   });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'getAllRequests' : IDL.Func([], [IDL.Vec(ContactRequest)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getRequestByTimestamp' : IDL.Func([IDL.Int], [ContactRequest], ['query']),
     'getRequestsByServiceType' : IDL.Func(
         [ServiceType],
         [IDL.Vec(ContactRequest)],
         ['query'],
       ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitRequest' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, ServiceType, IDL.Text],
         [],

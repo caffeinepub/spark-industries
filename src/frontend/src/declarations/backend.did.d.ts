@@ -22,13 +22,24 @@ export interface ContactRequest {
 export type ServiceType = { 'both' : null } |
   { 'laserCutting' : null } |
   { 'pressBrake' : null };
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'getAllRequests' : ActorMethod<[], Array<ContactRequest>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getRequestByTimestamp' : ActorMethod<[bigint], ContactRequest>,
   'getRequestsByServiceType' : ActorMethod<
     [ServiceType],
     Array<ContactRequest>
   >,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitRequest' : ActorMethod<
     [string, string, string, string, ServiceType, string],
     undefined

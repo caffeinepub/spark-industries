@@ -83,7 +83,7 @@ export default function Footer() {
                     <br />
                     Kattur SIDCO Industrial Estate,
                     <br />
-                    Thirumullaivoyal, Chennai – 600062
+                    Thirumullaivoyal, Chennai \u2013 600062
                   </span>
                 </span>
               </li>
@@ -120,16 +120,26 @@ export default function Footer() {
       {/* Bottom strip */}
       <div className="border-t border-white/5">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-foreground/40 text-[12px]">
-            &copy; {currentYear} Spark Industries. All rights reserved.
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-foreground/40 text-[12px]">
+              &copy; {currentYear} Spark Industries. All rights reserved.
+            </p>
+            <span className="text-foreground/20 text-[11px]">&middot;</span>
+            <a
+              href="/admin"
+              className="text-foreground/25 hover:text-foreground/50 text-[11px] transition-colors"
+              data-ocid="footer.admin.link"
+            >
+              Admin
+            </a>
+          </div>
           <a
             href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-foreground/30 hover:text-foreground/50 transition-colors text-[12px]"
           >
-            Built with ❤️ using caffeine.ai
+            Built with \u2764\ufe0f using caffeine.ai
             <ExternalLink className="h-3 w-3" />
           </a>
         </div>
